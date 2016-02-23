@@ -1,0 +1,36 @@
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Private Keys #
+################
+redirect/secret_keys.py
+
+# Running Vagrant Info #
+########################
+.vagrant/
+
+# Dev Tools #
+#############
+Vagrantfile
+setup.sh
+
+# Compiled Code #
+#################
+*.pyc
+
+# vim files #
+#############
+*.swp
+
+# testing tools #
+#################
+htmlcov/
+ghostdriver.log
+.coverage
