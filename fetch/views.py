@@ -12,8 +12,32 @@ class GetProductView(APIView):
 
         token = self.get_token()
 
-        return Response({'token': token.key})
+        response = self.make_product_call(token)
 
+        # If response is unauthorized, delete (likely expired) token and try again
+        if response.status_code == 401:
+            token.delete()
+            token = self.get_token()
+
+            response = self.make_product_call(token)
+
+        # If successful response, return server data
+        if response.status_code == 200:
+            return Response(response.json())
+
+        else:
+            return Response({"Error": "Error fetching product from Axiologue server.  Server returned messange " + response.text + " and status code " + response.status_code})
+
+    # Makes call to server based on url kwarg
+    def make_product_call(self, token):
+        headers = {'Authorization': 'Token ' + token.key}
+
+        r = requests.post('https://api.axiologue.org/articles/products/fetch/', headers=headers, data={'product': self.kwargs.get('product').replace(' ','-')})
+
+        return r
+
+    # Fetch Axiologue API Auth token from database
+    # If none is there, log in to Axiologue to get token
     def get_token(self):
         try:
             token = Token.objects.all()[0]
