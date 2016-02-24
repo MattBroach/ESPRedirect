@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
-from fetch.views import GetProductView
+from fetch.views import GetProductScoreView
 
 urlpatterns = [
-    url(r'^product/(?P<product>[\w-]+)/$', GetProductView.as_view()),
+    url(r'^product/overall-score/(?P<pk>\d+)/$', GetProductScoreView.as_view()),
 ]

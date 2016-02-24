@@ -34,3 +34,9 @@ setup.sh
 htmlcov/
 ghostdriver.log
 .coverage
+
+# server config files #
+#######################
+esp_nginx.conf
+esp_uwsgi.ini
+uwsgi_params

@@ -7,7 +7,7 @@ from fetch.models import Token
 
 from redirect.secret_keys import AX_USERNAME, AX_PASSWORD 
 
-class GetProductView(APIView):
+class GetProductScoreView(APIView):
     def get(self,request,*args,**kwargs):
 
         token = self.get_token()
@@ -26,13 +26,14 @@ class GetProductView(APIView):
             return Response(response.json())
 
         else:
-            return Response({"Error": "Error fetching product from Axiologue server.  Server returned messange " + response.text + " and status code " + response.status_code})
+            return Response({"Error": "Error fetching product from Axiologue server.  Server returned messange " + response.text + " and status code " + str(response.status_code)})
 
     # Makes call to server based on url kwarg
     def make_product_call(self, token):
         headers = {'Authorization': 'Token ' + token.key}
 
-        r = requests.post('https://api.axiologue.org/articles/products/fetch/', headers=headers, data={'product': self.kwargs.get('product').replace(' ','-')})
+        r = requests.get('https://api.axiologue.org/profile/scores/product/overall-only/' + self.kwargs['pk'] + '/', 
+                headers=headers )
 
         return r
 

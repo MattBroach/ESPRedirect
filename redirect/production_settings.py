@@ -6,8 +6,8 @@ ROOT_URLCONF = 'redirect.urls'
 DEBUG = False
 
 # Staticfiles settings
-STATIC_ROOT = '/esp/static/'
-MEDIA_ROOT = '/esp/media/'
+STATIC_ROOT = '/ESPRedirect/static/'
+MEDIA_ROOT = '/ESPRedirect/media/'
 
 # Net settings
 ALLOWED_HOSTS = ['*']
