@@ -7,7 +7,9 @@ from fetch.models import Token
 
 from redirect.secret_keys import AX_USERNAME, AX_PASSWORD 
 
-class GetProductScoreView(APIView):
+class BaseAxiologueAPIView(APIView):
+    axiologue_url = None
+
     def get(self,request,*args,**kwargs):
 
         token = self.get_token()
@@ -23,7 +25,9 @@ class GetProductScoreView(APIView):
 
         # If successful response, return server data
         if response.status_code == 200:
-            return Response(response.json())
+            data = self.parse_data(response)
+
+            return Response(data)
 
         else:
             return Response({"Error": "Error fetching product from Axiologue server.  Server returned messange " + response.text + " and status code " + str(response.status_code)})
@@ -32,8 +36,10 @@ class GetProductScoreView(APIView):
     def make_product_call(self, token):
         headers = {'Authorization': 'Token ' + token.key}
 
-        r = requests.get('https://api.axiologue.org/profile/scores/product/overall-only/' + self.kwargs['pk'] + '/', 
-                headers=headers )
+        r = requests.get(
+            self.get_url(), 
+            headers=headers 
+        )
 
         return r
 
@@ -53,3 +59,33 @@ class GetProductScoreView(APIView):
             token.save()
 
         return token
+
+    # Function for fetching API Url target
+    def get_url(self):
+        assert self.axiologue_url is not None, (
+            "'%s' should either include a `queryList` attribute, "
+            "or override the `get_queryList()` method."
+            % self.__class__.__name__
+        )
+
+        axiologue_url = self.axiologue_url
+
+        return axiologue_url
+
+    # By default returns whole data, but can be overwritten to provide more specific data
+    def parse_data(self, resp):
+        return resp.json()
+
+# Get Just the score
+class GetProductScoreView(BaseAxiologueAPIView):
+    def get_url(self):
+        return 'https://api.axiologue.org/profile/scores/product/overall-only/' + self.kwargs['pk'] + '/';
+
+
+# Get Score, Company Name, and Product Name
+class GetFullProductInfoView(BaseAxiologueAPIView):
+    def get_url(self):
+        return 'https://api.axiologue.org/profile/scores/product/' + self.kwargs['pk'] + '/';
+
+    def parse_data(self, resp):
+        return resp.json()

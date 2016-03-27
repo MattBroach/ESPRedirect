@@ -40,3 +40,7 @@ ghostdriver.log
 esp_nginx.conf
 esp_uwsgi.ini
 uwsgi_params
+
+# Collected Staticfiles #
+#########################
+static/
