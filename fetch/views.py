@@ -85,7 +85,15 @@ class GetProductScoreView(BaseAxiologueAPIView):
 # Get Score, Company Name, and Product Name
 class GetFullProductInfoView(BaseAxiologueAPIView):
     def get_url(self):
-        return 'https://api.axiologue.org/profile/scores/product/' + self.kwargs['pk'] + '/';
+        return 'https://api.axiologue.org/profile/scores/product/fetch/' + self.kwargs['pk'] + '/';
 
     def parse_data(self, resp):
-        return resp.json()
+        raw_data = resp.json()
+
+        data = {
+            'product': raw_data['product']['name'],
+            'company': raw_data['product']['company'],
+            'score': raw_data['score']['overall'] 
+        }
+
+        return data 
